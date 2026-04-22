@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { VALID_CLIENT_KEYS } from "../config/env.js";
 import { User } from "../models/User.js";
 import type { TLoginResponse } from "../types/auth/TLoginResponse.js";
@@ -13,9 +14,8 @@ export async function login(
         email: username.toLowerCase(),
         deletedAt: null
     })
-
     if (!user) throw new UnauthorizedError('InvalidCredentials', 'Invalid email or password');
-    const validPassword = false
+    const validPassword = await bcrypt.compare(password, user.passwordHash);
     if (!validPassword) throw new UnauthorizedError('InvalidCredentials', 'Invalid email or password');
     if (!VALID_CLIENT_KEYS.includes(clientAppKey)) {
         throw new UnauthorizedError('InvalidClientKey', 'Invalid client app key');

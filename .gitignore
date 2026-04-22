@@ -1,2 +1,6 @@
 key
 key.pub
+/node_modules
+.env
+
+package-lock.json
